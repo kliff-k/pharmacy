@@ -451,6 +451,10 @@ do_manage_configs()
 				done
 
 				sudo install -o root -g root -m 644 "./etc/nginx/snippets/ssl.conf" /etc/nginx/snippets
+				sudo install -o root -g root -m 644 "./etc/nginx/snippets/performance.conf" /etc/nginx/snippets
+				sudo sed -i "s/{domain}/$(config_get domain_name)/g" /etc/nginx/snippets/ssl.conf
+				sudo sed -i "s/# server_names_hash_bucket_size 64;/server_names_hash_bucket_size 64;/g" /etc/nginx/nginx.conf
+				sudo rm /etc/nginx/sites-enabled/default
 			fi
 
 			if [ "$(config_get nginx_serve_pihole)" = "true" ]
@@ -659,6 +663,7 @@ do_actions_pre_config()
 			IFS=':'
 			read -ra target <<< "${targets}"
 			unset IFS
+			# shellcheck disable=SC2001 # I need sed here
 			target[0]="$(echo ${target[0]} | sed -e 's/+++/,/g')"
 			echo "${target[0]}" | sudo tee -a "${target[1]}" 1> /dev/null
 		done
@@ -824,7 +829,7 @@ fi
 # --------- DO THE MAGIC ---------
 
 cd_to_script_dir
-if [ -n "${raspiConfig}" ]; then do_raspi_config; fi
+if [ -n "${raspiConfig}" ]; then do_raspi_config; exit 0; fi
 do_manage_users
 do_manage_packages
 do_actions_pre_config
