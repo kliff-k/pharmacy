@@ -1,0 +1,59 @@
+#Must be set in the global scope see: https://forum.nginx.org/read.php?2,152294,152294
+#Why this is important especially with Plex as it makes a lot of requests http://vincent.bernat.im/en/blog/2011-ssl-session-reuse-rfc5077.html / https://www.peterbe.com/plog/ssl_session_cache-ab
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 10m;
+
+#Upstream to Plex
+upstream plex_backend {
+	#Set this to the IP address that appears in `ifconfig` (NATTED LAN IP or Public IP address) if you want the bandwidth meter in the server status page to work
+	server {host_ip}:32400;
+	keepalive 32;
+}
+
+server {
+	listen 80;
+	#Enabling http2 can cause some issues with some devices, see #29 - Disable it if you experience issues
+	listen 443 ssl http2; #http2 can provide a substantial improvement for streaming: https://blog.cloudflare.com/introducing-http2/
+	server_name plex.{domain};
+
+	include snippets/ssl.conf;
+	include snippets/performance.conf;
+
+	send_timeout 100m; #Some players don't reopen a socket and playback stops totally instead of resuming after an extended pause (e.g. Chrome)
+
+	#Forward real ip and host to Plex
+	proxy_set_header Host $host;
+	proxy_set_header X-Real-IP $remote_addr;
+	#When using ngx_http_realip_module change $proxy_add_x_forwarded_for to '$http_x_forwarded_for,$realip_remote_addr'
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	proxy_set_header X-Forwarded-Proto $scheme;
+	proxy_set_header Sec-WebSocket-Extensions $http_sec_websocket_extensions;
+	proxy_set_header Sec-WebSocket-Key $http_sec_websocket_key;
+	proxy_set_header Sec-WebSocket-Version $http_sec_websocket_version;
+
+	#Websockets
+	proxy_http_version 1.1;
+	proxy_set_header Upgrade $http_upgrade;
+	proxy_set_header Connection "Upgrade";
+
+	#Disables compression between Plex and Nginx, required if using sub_filter below.
+	#May also improve loading time by a very marginal amount, as nginx will compress anyway.
+	#proxy_set_header Accept-Encoding "";
+
+	#Buffering off send to the client as soon as the data is received from Plex.
+	proxy_redirect off;
+	proxy_buffering off;
+
+	location / {
+		#Example of using sub_filter to alter what Plex displays, this disables Plex News.
+		#sub_filter ',news,' ',';
+		#sub_filter_once on;
+		#sub_filter_types text/xml;
+		proxy_pass http://plex_backend;
+	}
+
+	#PlexPy forward example, works the same for other services.
+	#location /plexpy {
+	#	proxy_pass http://127.0.0.1:8181;
+	#}
+}

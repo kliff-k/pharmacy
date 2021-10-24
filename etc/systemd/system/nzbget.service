@@ -1,0 +1,24 @@
+[Unit]
+Description=NZBGet Daemon
+Documentation=man:nzbget
+After=syslog.target network.target
+StartLimitIntervalSec=0
+ 
+[Service]
+User={admin}
+Group={admin}
+Type=forking
+ExecStart=/usr/bin/nzbget -D -c /home/{admin}/.config/nzbget/nzbget.conf
+ExecStop=/usr/bin/nzbget -Q
+ExecReload=/usr/bin/nzbget -O
+Restart=on-failure
+TimeoutStopSec=30
+KillMode=process
+RestartSec=5
+ReadWritePaths={download_path} /home/{admin}/.config/nzbget/
+ProtectSystem=strict
+PrivateDevices=true
+ 
+[Install]
+WantedBy=multi-user.target
+Alias=nzbget.service

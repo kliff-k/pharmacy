@@ -1,0 +1,9 @@
+[pihole]
+title=PiHole Ad Blocker (Standard)
+description=The PiHole DNS Level Ad Blocker
+ports=53|67|80/tcp|546:547/udp
+
+[pihole-webless]
+title=PiHole Ad Blocker (Webless)
+description=The PiHole DNS Level Ad Blocker
+ports=53|67|546:547/udp

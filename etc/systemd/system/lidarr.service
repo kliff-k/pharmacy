@@ -1,0 +1,20 @@
+[Unit]
+Description=Lidarr Daemon
+After=syslog.target network.target
+Wants={downloaders}
+StartLimitIntervalSec=0
+
+[Service]
+User={admin}
+Group={admin}
+Type=simple
+WorkingDirectory=/opt/lidarr/
+ExecStart=/opt/lidarr/Lidarr -nobrowser
+TimeoutStopSec=20
+KillMode=process
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+Alias=lidarr.service

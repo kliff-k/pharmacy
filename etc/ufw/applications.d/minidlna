@@ -1,0 +1,4 @@
+[minidlna]
+title=MiniDLNA Media Service (Standard)
+description=The MiniDLNA Media Service
+ports=1900/udp|8200/tcp

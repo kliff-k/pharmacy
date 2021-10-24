@@ -1,0 +1,20 @@
+[Unit]
+Description=Readarr Daemon
+After=syslog.target network.target
+Wants={downloaders}
+StartLimitIntervalSec=0
+
+[Service]
+User={admin}
+Group={admin}
+Type=simple
+WorkingDirectory=/opt/readarr/
+ExecStart=/opt/readarr/Readarr -nobrowser
+TimeoutStopSec=20
+KillMode=process
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+Alias=readarr.service

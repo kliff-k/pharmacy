@@ -1,0 +1,4 @@
+[jellyfin]
+title=Jellyfin Media Server
+description=The Jellyfin Media Server
+ports=8096/tcp|8920/tcp|1900/udp|7359/udp

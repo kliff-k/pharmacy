@@ -1,0 +1,19 @@
+[Unit]
+Description=Prowlarr Daemon
+After=syslog.target network.target
+StartLimitIntervalSec=0
+
+[Service]
+User={admin}
+Group={admin}
+Type=simple
+WorkingDirectory=/opt/prowlarr/
+ExecStart=/opt/prowlarr/Prowlarr -nobrowser
+TimeoutStopSec=20
+KillMode=process
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+Alias=prowlarr.service

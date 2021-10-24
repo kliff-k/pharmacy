@@ -1,0 +1,20 @@
+[Unit]
+Description=Jackett Daemon
+After=syslog.target network.target
+Before={collectors}
+StartLimitIntervalSec=0
+ 
+[Service]
+User={admin}
+Group={admin}
+Type=simple
+SyslogIdentifier=jackett
+Restart=on-failure
+RestartSec=5
+WorkingDirectory=/opt/jackett
+ExecStart=/bin/sh /opt/jackett/jackett_launcher.sh
+TimeoutStopSec=30
+ 
+[Install]
+WantedBy=multi-user.target
+Alias=jackett.service
