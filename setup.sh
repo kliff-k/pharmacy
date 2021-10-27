@@ -843,16 +843,20 @@ do_disk_check
 # --------- SETUP ---------
 
 # Capture options
-while getopts rc: flag
+while getopts cisbrp: flag
 do
 	case "${flag}" in
-		c) configPath=${OPTARG};;
-		r) raspiConfig="true";;
+		p) configPath=${OPTARG};;
+		c) raspiConfig="true";;
+		i) pharmacyInstall="true";;
+		s) pharmacySetup="true";;
+		b) remedyBackup="true";;
+		r) remedyRestore="true";;
 		*) ;;
 	esac
 done
 
-# Starts interactive setup 
+# Starts interactive setup
 if [ ! -f "${configPath}" ]
 then
 	do_interactive_config_check
@@ -862,20 +866,25 @@ fi
 # --------- DO THE MAGIC ---------
 
 cd_to_script_dir
-if [ -n "${raspiConfig}" ]; then do_raspi_config; exit 0; fi
-do_manage_users
-do_manage_packages
-do_actions_pre_install
-do_manage_installers
-do_manage_archives
-do_manage_units
-do_actions_pre_config
-do_manage_configs
-do_custom_actions
-do_enable_services
-#do_remedy_backup
-do_remedy_restore
+if [ -n "${raspiConfig}" ]; then do_raspi_config; echo -e "${pharmacy_m} Config complete"; exit 0; fi
+if [ -n "${remedyBackup}" ]; then do_remedy_backup; echo -e "${pharmacy_m} Backup complete"; exit 0; fi
+if [ -n "${remedyRestore}" ]; then do_remedy_restore; echo -e "${pharmacy_m} Restore complete"; exit 0; fi
+if [ -n "${pharmacyInstall}" ]; then do_manage_packages; echo -e "${pharmacy_m} Install complete"; exit 0; fi
+if [ -n "${pharmacySetup}" ]
+then
+	do_manage_users
+	do_actions_pre_install
+	do_manage_installers
+	do_manage_archives
+	do_manage_units
+	do_actions_pre_config
+	do_manage_configs
+	do_custom_actions
+	do_enable_services
+	echo -e "${pharmacy_m} Setup complete"
+	exit 0;
+fi
 
 # --------- DONE THE MAGIC ---------
 
-echo -e "${pharmacy_m} Setup complete"
+echo -e "${pharmacy_m} Script finalized"
