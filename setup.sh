@@ -77,7 +77,7 @@ do_raspi_config()
 	then
 		echo -e "${pharmacy_m} Changing Swap Size"
 		sudo dphys-swapfile swapoff 1> /dev/null
-		sudo sed -i "s/CONF_SWAPSIZE=100/CONF_SWAPSIZE=$(config_get change_swap_size)/g" /etc/dphys-swapfile 1> /dev/null
+		sudo sed -i "s/CONF_SWAPSIZE=100/CONF_SWAPSIZE=$(config_get change_swap_size)/g" /etc/dphys-swapfile
 		sudo dphys-swapfile setup 1> /dev/null
 		sudo dphys-swapfile swapon 1> /dev/null
 	fi
@@ -595,8 +595,8 @@ do_manage_configs()
 
 ### Actions
 
-# Manipulate files before the configuration step
-do_actions_pre_config()
+# Manipulate files before the installation step
+do_actions_pre_install()
 {
 	if [ -n "$(config_get git_clone_repos)" ]
 	then
@@ -606,8 +606,11 @@ do_actions_pre_config()
 			git clone --depth=1 "${repo}" "/tmp/$(echo ${repo} | sed -e 's#.*/##' -e 's#.git##')"
 		done
 	fi
+}
 
-
+# Manipulate files before the configuration step
+do_actions_pre_config()
+{
 	if [ -n "$(config_get make_dir)" ]
 	then
 		echo -e "${pharmacy_m} Creating directories"
@@ -667,6 +670,33 @@ do_actions_pre_config()
 			target[0]="$(echo ${target[0]} | sed -e 's/+++/,/g')"
 			echo "${target[0]}" | sudo tee -a "${target[1]}" 1> /dev/null
 		done
+	fi
+}
+
+### Custom Actions
+
+# Execute specific actions
+do_custom_actions()
+{
+	if [ -n "$(config_get tm_key)" ]
+	then
+		echo -e "${pharmacy_m} Setting up Telegram Mailgate"
+
+		sudo pip3 install python-telegram-bot
+		sudo cp /tmp/telegram-mailgate/telegram-mailgate.py /usr/local/bin/
+		sudo chown $(config_get admin) /usr/local/bin/telegram-mailgate.py
+		sudo chmod 700 /usr/local/bin/telegram-mailgate.py
+		sudo mkdir /etc/telegram-mailgate
+		sudo cp /tmp/telegram-mailgate/{main.cf,logging.cf,aliases} /etc/telegram-mailgate/
+
+		sudo sed -i "s/key=$/key=$(config_get tm_key)/g" /etc/telegram-mailgate/main.cf 1> /dev/null
+		sudo sed -i "s/nobody 0123456789/$(config_get tm_alias)/g" /etc/telegram-mailgate/aliases 1> /dev/null
+		echo "content_filter = telegram-mailgate" | sudo tee -a /etc/postfix/main.cf 1> /dev/null
+
+		echo "# =======================================================================" | sudo tee -a /etc/postfix/master.cf 1> /dev/null
+		echo "# telegram-mailgate"                                                       | sudo tee -a /etc/postfix/master.cf 1> /dev/null
+		echo "telegram-mailgate unix -     n       n       -        -      pipe"         | sudo tee -a /etc/postfix/master.cf 1> /dev/null
+		echo "  flags= user=$(config_get admin) argv=/usr/local/bin/telegram-mailgate.py --simple-header --queue-id $queue_id $recipient" | sudo tee -a /etc/postfix/master.cf 1> /dev/null
 	fi
 }
 
@@ -832,11 +862,13 @@ cd_to_script_dir
 if [ -n "${raspiConfig}" ]; then do_raspi_config; exit 0; fi
 do_manage_users
 do_manage_packages
-do_actions_pre_config
+do_actions_pre_install
 do_manage_installers
 do_manage_archives
 do_manage_units
+do_actions_pre_config
 do_manage_configs
+do_custom_actions
 do_enable_services
 #do_remedy_backup
 do_remedy_restore
