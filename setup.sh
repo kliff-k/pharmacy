@@ -681,6 +681,12 @@ do_actions_pre_config()
 # Execute specific actions
 do_custom_actions()
 {
+	if [ -n "$(config_get nginx_proxied_services)" ]
+	then
+		echo -e "${pharmacy_m} Removing default nginx server"
+		sudo rm /etc/nginx/sites-enabled/default
+	fi
+
 	if [ -n "$(config_get tm_key)" ]
 	then
 		echo -e "${pharmacy_m} Setting up Telegram Mailgate"
