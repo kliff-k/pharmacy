@@ -579,6 +579,7 @@ do_manage_configs()
 	if [ -n "$(config_get restore_ssl_files)" ]
 	then
 		echo -e "${pharmacy_m} Restoring ssl files"
+		sudo mkdir -p /etc/ssl/local
 		for file in $(echo "$(config_get restore_ssl_files)" | tr "," "\n")
 		do
 			sudo install -o root -g root -m 644 "$(config_get ${file})" /etc/ssl/local/
