@@ -149,8 +149,8 @@ do_manage_packages()
 	echo -e "${pharmacy_m} Setting up repos"
 	for package in $(echo "$(config_get add_repo)" | tr "," "\n")
 	do
-		curl "$(config_get ${package}_key)"  | sudo apt-key add 
-		echo "$(config_get ${package}_repo)" | sudo tee "/etc/apt/sources.list.d/${package}.list"
+		curl -sSL "$(config_get ${package}_key)" | sudo apt-key add 
+		echo "$(config_get ${package}_repo)"     | sudo tee "/etc/apt/sources.list.d/${package}.list"
 	done
 
 	echo -e "${pharmacy_m} Setting up selections"
