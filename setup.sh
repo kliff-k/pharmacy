@@ -285,6 +285,7 @@ do_manage_configs()
 			echo -e "${pharmacy_m} ${package}"
 			for user in $(echo "$(config_get neofetch_users)" | tr "," "\n")
 			do
+				sudo su ${user} -c neofetch 1> /dev/null
 				for info in $(echo "$(config_get neofetch_show)" | tr "," "\n")
 				do
 					sed -i "/info \".*\" ${info}/s/^#//g" "/home/${user}/.config/neofetch/config.conf"
@@ -307,7 +308,8 @@ do_manage_configs()
 
 			for user in $(echo "$(config_get ohmyzsh_users)" | tr "," "\n")
 			do
-				ZSH_home="/home/${user}/.oh-my-zsh" 
+				ZSH_home="/home/${user}/.oh-my-zsh"
+				echo "plugins=(git)" | sudo -u ${user} tee "/home/${user}/.zshrc" 1> /dev/null
 				sh -c "$(curl -fsSL $(config_get ohmyzsh_url))" "" --unattended
 				for plugin in $(echo "$(config_get ohmyzsh_plugins)" | tr "," "\n")
 				do
