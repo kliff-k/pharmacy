@@ -190,7 +190,7 @@ do_manage_installers()
 				curl -sSL "$(config_get pihole_url)" | bash
 			else
 				sudo mkdir /etc/pihole && sudo install -o root -g root -m 644 "$(config_get pihole_setup_vars)" /etc/pihole/setupVars.conf
-				curl -L "$(config_get pihole_url)" | bash /dev/stdin --unattended
+				curl -sSL "$(config_get pihole_url)" | sudo bash /dev/stdin --unattended
 			fi
 		fi
 
@@ -201,7 +201,7 @@ do_manage_installers()
 			then
 				curl -sSL "$(config_get pivpn_url)" | bash 
 			else
-				curl -L "$(config_get pivpn_url)" | bash /dev/stdin --unattended "$(config_get pivpn_setup_vars)"
+				curl -sSL "$(config_get pivpn_url)" | sudo bash /dev/stdin --unattended "$(config_get pivpn_setup_vars)"
 			fi
 		fi
 	done
