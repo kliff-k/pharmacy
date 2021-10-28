@@ -491,7 +491,7 @@ do_manage_configs()
 		if [ "${package}" = "deluged" ]
 		then
 			echo -e "${pharmacy_m} ${package}"
-			sudo mkdir -p "/home/$(config_get admin)/.config/deluge/torrentfiles"
+			sudo -u "$(config_get admin)" mkdir -p "/home/$(config_get admin)/.config/deluge/torrentfiles"
 			sudo -u "$(config_get admin)" deluge-console plugin -e Label
 			sudo -u "$(config_get admin)" deluge-console config --set torrentfiles_location "/home/$(config_get admin)/.config/deluge/torrentfiles"
 			sudo -u "$(config_get admin)" deluge-console config --set copy_torrent_file true
