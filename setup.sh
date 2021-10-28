@@ -310,7 +310,7 @@ do_manage_configs()
 			do
 				ZSH_home="/home/${user}/.oh-my-zsh"
 				echo "plugins=(git)" | sudo -u ${user} tee "/home/${user}/.zshrc" 1> /dev/null
-				sh -c "$(curl -fsSL $(config_get ohmyzsh_url))" "" --unattended
+				sudo -u ${user} sh -c "$(curl -fsSL $(config_get ohmyzsh_url))" "" --unattended
 				for plugin in $(echo "$(config_get ohmyzsh_plugins)" | tr "," "\n")
 				do
 					sudo -u $(config_get ohmyzsh_users) git clone --depth=1 "${plugin}" "${ZSH_home}/custom/plugins/$(echo "${plugin}" | sed -e 's#.*/##' -e 's#.git##')"
