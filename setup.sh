@@ -288,12 +288,12 @@ do_manage_configs()
 				sudo su ${user} -c neofetch 1> /dev/null
 				for info in $(echo "$(config_get neofetch_show)" | tr "," "\n")
 				do
-					sed -i "/info \".*\" ${info}/s/^#//g" "/home/${user}/.config/neofetch/config.conf"
+					sudo sed -i "/info \".*\" ${info}/s/^#//g" "/home/${user}/.config/neofetch/config.conf"
 				done
 
 				for info in $(echo "$(config_get neofetch_hide)" | tr "," "\n")
 				do
-					sed -i "/info \".*\" ${info}/s/^/#/g" "/home/${user}/.config/neofetch/config.conf"
+					sudo sed -i "/info \".*\" ${info}/s/^/#/g" "/home/${user}/.config/neofetch/config.conf"
 				done
 			done
 		fi
@@ -324,7 +324,7 @@ do_manage_configs()
 
 				if [ -n "$(config_get ohmyzsh_active_theme)" ]
 				then
-					sed -i "s|ZSH_THEME=\".*$|ZSH_THEME=\"$(config_get ohmyzsh_active_theme)\"|g" "/home/${user}/.zshrc"
+					sudo sed -i "s|ZSH_THEME=\".*$|ZSH_THEME=\"$(config_get ohmyzsh_active_theme)\"|g" "/home/${user}/.zshrc"
 				fi
 
 				if [ -f "$(config_get copy_zshrc)" ]
@@ -456,7 +456,6 @@ do_manage_configs()
 				sudo install -o root -g root -m 644 "./etc/nginx/snippets/performance.conf" /etc/nginx/snippets
 				sudo sed -i "s/{domain}/$(config_get domain_name)/g" /etc/nginx/snippets/ssl.conf
 				sudo sed -i "s/# server_names_hash_bucket_size 64;/server_names_hash_bucket_size 64;/g" /etc/nginx/nginx.conf
-				sudo rm /etc/nginx/sites-enabled/default
 			fi
 
 			if [ "$(config_get nginx_serve_pihole)" = "true" ]
@@ -727,6 +726,7 @@ do_non_interactive_check()
 # Check if there is enough free space on the SD card
 do_disk_check()
 {
+	echo -e "${pharmacy_m} Checking disk space"
 	freeSpace=$(df | grep '/dev/root' | tail -n1 | awk '{print $4}' | sed 's/[^0-9]//')
 	if [ $freeSpace -lt 3000000 ]
 	then
@@ -738,6 +738,7 @@ do_disk_check()
 # Enable services to restart at boot
 do_enable_services()
 {
+	echo -e "${pharmacy_m} Enabling services"
 	for service in $(echo "$(config_get enable)" | tr "," "\n")
 	do
 		services="${services} ${service}"
