@@ -790,6 +790,7 @@ do_remedy_restore()
 	echo -e "${pharmacy_m} Restoring REMEDy config/db"
 	
 	sudo -u $(config_get admin) mkdir -p "/opt/bazarr/data/db"
+	sudo -u $(config_get admin) mkdir -p "/opt/bazarr/data/config"
 	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Radarr"
 	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Sonarr"
 	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Lidarr"
