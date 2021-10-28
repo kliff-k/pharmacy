@@ -788,6 +788,14 @@ do_remedy_backup()
 do_remedy_restore()
 {
 	echo -e "${pharmacy_m} Restoring REMEDy config/db"
+	
+	sudo -u $(config_get admin) mkdir -p "/opt/bazarr/data/db"
+	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Radarr"
+	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Sonarr"
+	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Lidarr"
+	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Readarr"
+	sudo -u $(config_get admin) mkdir -p "/home/$(config_get admin)/.config/Prowlarr"
+
 	#sudo cp -r "/home/$(config_get admin)/backups/remedy/plex/Preferences.xml" "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Preferences.xml" 
 
 	sudo cp -r "/home/$(config_get admin)/backups/remedy/Bazarr/config.ini" "/opt/bazarr/data/config/config.ini" 
