@@ -710,7 +710,7 @@ do_custom_actions()
 		echo "# =======================================================================" | sudo tee -a /etc/postfix/master.cf 1> /dev/null
 		echo "# telegram-mailgate"                                                       | sudo tee -a /etc/postfix/master.cf 1> /dev/null
 		echo "telegram-mailgate unix -     n       n       -        -      pipe"         | sudo tee -a /etc/postfix/master.cf 1> /dev/null
-		echo "  flags= user=$(config_get admin) argv=/usr/local/bin/telegram-mailgate.py --simple-header --queue-id $queue_id $recipient" | sudo tee -a /etc/postfix/master.cf 1> /dev/null
+		echo "  flags= user=$(config_get admin) argv=/usr/local/bin/telegram-mailgate.py --simple-header --queue-id \$queue_id \$recipient" | sudo tee -a /etc/postfix/master.cf 1> /dev/null
 	fi
 }
 
