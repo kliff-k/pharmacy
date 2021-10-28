@@ -545,6 +545,7 @@ do_manage_configs()
 		echo -e "${pharmacy_m} Disabling ssh greetings"
 		echo '' | sudo tee /etc/motd 1> /dev/null
 		sudo sed -i 's/.*PrintMotd.*$/PrintMotd no/g' /etc/ssh/sshd_config
+		sudo sed -i 's/.*PrintLastLog.*$/PrintLastLog no/g' /etc/ssh/sshd_config
 		sudo sed -i 's/.*uname.*$/# uname -snrvm/g' /etc/update-motd.d/10-uname
 	fi
 
