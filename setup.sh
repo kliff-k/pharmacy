@@ -679,6 +679,13 @@ do_actions_pre_config()
 # Execute specific actions
 do_custom_actions()
 {
+	if [ -n "$(config_get admin_git_name)" ] && [ -n "$(config_get admin_git_email)" ]
+	then
+		echo -e "${pharmacy_m} Setting admin git credentials"
+		sudo -u $(config_get admin) git config --global user.name "$(config_get admin_git_name)"
+		sudo -u $(config_get admin) git config --global user.email "$(config_get admin_git_email)"
+	fi
+	
 	if [ -n "$(config_get nginx_proxied_services)" ]
 	then
 		echo -e "${pharmacy_m} Removing default nginx server"
