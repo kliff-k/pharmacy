@@ -654,7 +654,7 @@ do_actions_pre_config()
 			IFS=':'
 			read -ra target <<< "${targets}"
 			unset IFS
-			sudo chmod -R ${target[0]} "${target[1]}"
+			sudo chmod -R ${target[0]} ${target[1]}
 		done
 	fi
 
