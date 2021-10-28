@@ -488,7 +488,7 @@ do_manage_configs()
 			fi
 		fi
 
-		if [ "${package}" = "deluge" ]
+		if [ "${package}" = "deluged" ]
 		then
 			echo -e "${pharmacy_m} ${package}"
 			sudo mkdir -p "/home/$(config_get admin)/.config/deluge/torrentfiles"
