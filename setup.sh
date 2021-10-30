@@ -518,7 +518,7 @@ do_manage_configs()
 
 	if [ "$(config_get pihole_dns_local_domain)" = "true" ]
 	then
-		echo -e "${pharmacy_m} Setting up pihole as local dns"
+		echo -e "${pharmacy_m} Adding local domain to pihole DNS"
 		echo "$(hostname -I | awk '{print $1}') $(config_get domain_name)" | sudo tee -a /etc/pihole/custom.list 1> /dev/null
 	fi
 
