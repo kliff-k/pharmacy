@@ -10,9 +10,9 @@ Type=simple
 ExecStart=/usr/bin/deluged -d
 Restart=on-failure
 TimeoutStopSec=30
-ReadWritePaths={download_path} /home/{admin}/.config/deluge/
-ProtectSystem=strict
-PrivateDevices=true
+# ReadWritePaths={download_path} /home/{admin}/.config/deluge/
+# ProtectSystem=strict
+# PrivateDevices=true
 
 [Install]
 WantedBy=multi-user.target
