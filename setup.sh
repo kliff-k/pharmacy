@@ -559,7 +559,7 @@ do_manage_configs()
 			unset IFS
 			# shellcheck disable=SC2024 # sudo is not being use in the redirect here.
 			sudo -u ${user[0]} crontab -l > /tmp/tempcron
-			cat "${user[1]}" | sudo tee -a /tmp/tempcron 1> /dev/null
+			cat "${user[1]}" | sudo -u ${user[0]} tee -a /tmp/tempcron 1> /dev/null
 			sudo -u ${user[0]} crontab /tmp/tempcron
 			rm /tmp/tempcron
 		done
