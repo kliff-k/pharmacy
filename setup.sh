@@ -811,10 +811,10 @@ do_remedy_restore()
 
 	sudo chown $(config_get admin):$(config_get admin) /opt/bazarr/data/ -R
 
-	sudo -u "$(config_get admin)" cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/authentication.db" "/var/lib/jellyfin/data/authentication.db" 
-	sudo -u "$(config_get admin)" cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/jellyfin.db" "/var/lib/jellyfin/data/jellyfin.db"
-	sudo -u "$(config_get admin)" cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/library.db" "/var/lib/jellyfin/data/library.db"
-	sudo -u "$(config_get admin)" cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/device.txt" "/var/lib/jellyfin/data/device.txt"
+	sudo cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/authentication.db" "/var/lib/jellyfin/data/authentication.db" 
+	sudo cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/jellyfin.db" "/var/lib/jellyfin/data/jellyfin.db"
+	sudo cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/library.db" "/var/lib/jellyfin/data/library.db"
+	sudo cp -r "/home/$(config_get admin)/backup/remedy/jellyfin/device.txt" "/var/lib/jellyfin/data/device.txt"
 
 	sudo chown jellyfin:jellyfin /var/lib/jellyfin/data/ -R
 
