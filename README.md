@@ -10,7 +10,7 @@ This script will automate the setup of a Raspberry Pi to serve as:
 * Media Agregator (Radarr + Sonarr + Lidarr + Readarr + Bazarr + Jackett)
 * Media Downloader (NZBGet + Deluge)
 
-Adititionally:
+Additionally:
 * Nginx will be set up to serve every service through local domain names (Using Pihole DNS).
 * Since we have Nginx available, it will be set up to serve Pihole web dashboard as well.
 * PHP will be needed for Pihole web dashboard, so we will also set it up with Nginx serve private web pages.
